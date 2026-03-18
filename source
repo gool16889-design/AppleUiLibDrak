@@ -1000,6 +1000,602 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             end
         end
 
+        -- =====================================================
+        -- SLIDER
+        -- sec:Slider(name, min, max, default, callback)
+        -- callback получает number
+        -- =====================================================
+        function sec:Slider(name, min, max, default, callback)
+            local value = math.clamp(default or min, min, max)
+
+            local sliderrow = Instance.new("TextLabel")
+            sliderrow.Name = "sliderrow"
+            sliderrow.Parent = workareamain
+            sliderrow.BackgroundTransparency = 1
+            sliderrow.Size = UDim2.new(0, 418, 0, 46)
+            sliderrow.Font = Enum.Font.Gotham
+            sliderrow.Text = name
+            sliderrow.TextColor3 = theme.textPrimary
+            sliderrow.TextSize = 21
+            sliderrow.TextWrapped = true
+            sliderrow.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- value label
+            local vallabel = Instance.new("TextLabel")
+            vallabel.Parent = sliderrow
+            vallabel.BackgroundTransparency = 1
+            vallabel.AnchorPoint = Vector2.new(1, 0)
+            vallabel.Position = UDim2.new(1, 0, 0, 0)
+            vallabel.Size = UDim2.new(0, 60, 0, 22)
+            vallabel.Font = Enum.Font.GothamMedium
+            vallabel.Text = tostring(value)
+            vallabel.TextColor3 = theme.accent
+            vallabel.TextSize = 18
+            vallabel.TextXAlignment = Enum.TextXAlignment.Right
+
+            -- track bg
+            local track = Instance.new("Frame")
+            track.Parent = sliderrow
+            track.BackgroundColor3 = theme.elevated
+            track.Position = UDim2.new(0, 0, 0, 28)
+            track.Size = UDim2.new(1, 0, 0, 10)
+
+            local trackStroke = Instance.new("UIStroke")
+            trackStroke.Color = theme.border
+            trackStroke.Thickness = 1
+            trackStroke.Parent = track
+
+            local uc_sl1 = Instance.new("UICorner")
+            uc_sl1.CornerRadius = UDim.new(1, 0)
+            uc_sl1.Parent = track
+
+            -- fill
+            local fill = Instance.new("Frame")
+            fill.Parent = track
+            fill.BackgroundColor3 = theme.accent
+            fill.Size = UDim2.new((value - min) / (max - min), 0, 1, 0)
+            fill.BorderSizePixel = 0
+
+            local uc_sl2 = Instance.new("UICorner")
+            uc_sl2.CornerRadius = UDim.new(1, 0)
+            uc_sl2.Parent = fill
+
+            -- thumb
+            local thumb = Instance.new("Frame")
+            thumb.Parent = track
+            thumb.BackgroundColor3 = Color3.fromRGB(230, 230, 240)
+            thumb.AnchorPoint = Vector2.new(0.5, 0.5)
+            thumb.Position = UDim2.new((value - min) / (max - min), 0, 0.5, 0)
+            thumb.Size = UDim2.new(0, 16, 0, 16)
+            thumb.ZIndex = 2
+
+            local uc_sl3 = Instance.new("UICorner")
+            uc_sl3.CornerRadius = UDim.new(1, 0)
+            uc_sl3.Parent = thumb
+
+            -- drag logic
+            local draggingSlider = false
+            local UIS = game:GetService("UserInputService")
+
+            local function updateSlider(inputX)
+                local absPos = track.AbsolutePosition.X
+                local absSize = track.AbsoluteSize.X
+                local rel = math.clamp((inputX - absPos) / absSize, 0, 1)
+                value = math.floor(min + (max - min) * rel)
+                fill.Size = UDim2.new(rel, 0, 1, 0)
+                thumb.Position = UDim2.new(rel, 0, 0.5, 0)
+                vallabel.Text = tostring(value)
+                if callback then callback(value) end
+            end
+
+            track.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingSlider = true
+                    updateSlider(input.Position.X)
+                end
+            end)
+            thumb.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingSlider = true
+                end
+            end)
+            UIS.InputChanged:Connect(function(input)
+                if draggingSlider and input.UserInputType == Enum.UserInputType.MouseMovement then
+                    updateSlider(input.Position.X)
+                end
+            end)
+            UIS.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingSlider = false
+                end
+            end)
+        end
+
+        -- =====================================================
+        -- DROPDOWN
+        -- sec:Dropdown(name, options, default, callback)
+        -- options = {"Option1", "Option2", ...}
+        -- callback получает string
+        -- =====================================================
+        function sec:Dropdown(name, options, default, callback)
+            local selected = default or options[1]
+            local open = false
+
+            -- wrapper — будет расти при открытии
+            local wrapper = Instance.new("Frame")
+            wrapper.Name = "dropdownwrapper"
+            wrapper.Parent = workareamain
+            wrapper.BackgroundTransparency = 1
+            wrapper.Size = UDim2.new(0, 418, 0, 37)
+            wrapper.ClipsDescendants = false
+
+            local wrapperLayout = Instance.new("UIListLayout")
+            wrapperLayout.Parent = wrapper
+            wrapperLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            wrapperLayout.Padding = UDim.new(0, 4)
+
+            -- header row
+            local ddrow = Instance.new("Frame")
+            ddrow.Name = "ddrow"
+            ddrow.Parent = wrapper
+            ddrow.BackgroundTransparency = 1
+            ddrow.Size = UDim2.new(0, 418, 0, 37)
+            ddrow.LayoutOrder = 0
+
+            local namelabel = Instance.new("TextLabel")
+            namelabel.Parent = ddrow
+            namelabel.BackgroundTransparency = 1
+            namelabel.Size = UDim2.new(0.44, 0, 1, 0)
+            namelabel.Font = Enum.Font.Gotham
+            namelabel.Text = name
+            namelabel.TextColor3 = theme.textPrimary
+            namelabel.TextSize = 21
+            namelabel.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- button
+            local ddbtn = Instance.new("TextButton")
+            ddbtn.Parent = ddrow
+            ddbtn.BackgroundColor3 = theme.elevated
+            ddbtn.Position = UDim2.new(0.44, 0, 0, 1)
+            ddbtn.Size = UDim2.new(0.56, 0, 1, -2)
+            ddbtn.AutoButtonColor = false
+            ddbtn.Font = Enum.Font.Gotham
+            ddbtn.Text = selected .. "  ▾"
+            ddbtn.TextColor3 = theme.textPrimary
+            ddbtn.TextSize = 18
+            ddbtn.ZIndex = 4
+
+            local ddbtnUC = Instance.new("UICorner")
+            ddbtnUC.CornerRadius = UDim.new(0, 9)
+            ddbtnUC.Parent = ddbtn
+
+            local ddbtnStroke = Instance.new("UIStroke")
+            ddbtnStroke.Color = theme.border
+            ddbtnStroke.Thickness = 1
+            ddbtnStroke.Parent = ddbtn
+
+            -- dropdown list container
+            local ddlist = Instance.new("Frame")
+            ddlist.Name = "ddlist"
+            ddlist.Parent = wrapper
+            ddlist.BackgroundColor3 = theme.elevated
+            ddlist.Size = UDim2.new(0.56, 0, 0, #options * 34 + 6)
+            ddlist.Position = UDim2.new(0.44, 0, 0, 0)
+            ddlist.Visible = false
+            ddlist.ZIndex = 10
+            ddlist.LayoutOrder = 1
+            ddlist.ClipsDescendants = true
+
+            local ddlistUC = Instance.new("UICorner")
+            ddlistUC.CornerRadius = UDim.new(0, 9)
+            ddlistUC.Parent = ddlist
+
+            local ddlistStroke = Instance.new("UIStroke")
+            ddlistStroke.Color = theme.accent
+            ddlistStroke.Thickness = 1
+            ddlistStroke.Parent = ddlist
+
+            local ddlistLayout = Instance.new("UIListLayout")
+            ddlistLayout.Parent = ddlist
+            ddlistLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            ddlistLayout.Padding = UDim.new(0, 2)
+
+            local ddlistPad = Instance.new("UIPadding")
+            ddlistPad.Parent = ddlist
+            ddlistPad.PaddingTop = UDim.new(0, 3)
+            ddlistPad.PaddingBottom = UDim.new(0, 3)
+            ddlistPad.PaddingLeft = UDim.new(0, 4)
+            ddlistPad.PaddingRight = UDim.new(0, 4)
+
+            for _, opt in ipairs(options) do
+                local optbtn = Instance.new("TextButton")
+                optbtn.Parent = ddlist
+                optbtn.BackgroundColor3 = theme.border
+                optbtn.BackgroundTransparency = 1
+                optbtn.Size = UDim2.new(1, 0, 0, 30)
+                optbtn.Font = Enum.Font.Gotham
+                optbtn.Text = opt
+                optbtn.TextColor3 = opt == selected and theme.accent or theme.textPrimary
+                optbtn.TextSize = 17
+                optbtn.ZIndex = 11
+                optbtn.AutoButtonColor = false
+
+                local optUC = Instance.new("UICorner")
+                optUC.CornerRadius = UDim.new(0, 6)
+                optUC.Parent = optbtn
+
+                optbtn.MouseEnter:Connect(function()
+                    optbtn.BackgroundTransparency = 0
+                end)
+                optbtn.MouseLeave:Connect(function()
+                    optbtn.BackgroundTransparency = 1
+                end)
+                optbtn.MouseButton1Click:Connect(function()
+                    selected = opt
+                    ddbtn.Text = selected .. "  ▾"
+                    -- reset all colours
+                    for _, c in ipairs(ddlist:GetChildren()) do
+                        if c:IsA("TextButton") then
+                            c.TextColor3 = theme.textPrimary
+                        end
+                    end
+                    optbtn.TextColor3 = theme.accent
+                    open = false
+                    ddlist.Visible = false
+                    wrapper.Size = UDim2.new(0, 418, 0, 37)
+                    if callback then callback(selected) end
+                end)
+            end
+
+            ddbtn.MouseButton1Click:Connect(function()
+                open = not open
+                ddlist.Visible = open
+                if open then
+                    wrapper.Size = UDim2.new(0, 418, 0, 37 + 4 + #options * 34 + 6)
+                    ddbtn.Text = selected .. "  ▴"
+                else
+                    wrapper.Size = UDim2.new(0, 418, 0, 37)
+                    ddbtn.Text = selected .. "  ▾"
+                end
+            end)
+        end
+
+        -- =====================================================
+        -- KEYBIND
+        -- sec:Keybind(name, default, callback)
+        -- default = Enum.KeyCode.F  (или nil)
+        -- callback получает Enum.KeyCode
+        -- =====================================================
+        function sec:Keybind(name, default, callback)
+            local currentKey = default
+            local listening = false
+            local UIS = game:GetService("UserInputService")
+
+            local kbrow = Instance.new("TextLabel")
+            kbrow.Name = "kbrow"
+            kbrow.Parent = workareamain
+            kbrow.BackgroundTransparency = 1
+            kbrow.Size = UDim2.new(0, 418, 0, 37)
+            kbrow.Font = Enum.Font.Gotham
+            kbrow.Text = name
+            kbrow.TextColor3 = theme.textPrimary
+            kbrow.TextSize = 21
+            kbrow.TextWrapped = true
+            kbrow.TextXAlignment = Enum.TextXAlignment.Left
+
+            local kbbtn = Instance.new("TextButton")
+            kbbtn.Parent = kbrow
+            kbbtn.BackgroundColor3 = theme.elevated
+            kbbtn.AnchorPoint = Vector2.new(1, 0.5)
+            kbbtn.Position = UDim2.new(1, 0, 0.5, 0)
+            kbbtn.Size = UDim2.new(0, 110, 0, 28)
+            kbbtn.AutoButtonColor = false
+            kbbtn.Font = Enum.Font.GothamMedium
+            kbbtn.Text = currentKey and tostring(currentKey).gsub(tostring(currentKey), "Enum.KeyCode.", "") or "None"
+            kbbtn.TextColor3 = theme.accent
+            kbbtn.TextSize = 17
+            kbbtn.ZIndex = 3
+
+            local kbbtnUC = Instance.new("UICorner")
+            kbbtnUC.CornerRadius = UDim.new(0, 7)
+            kbbtnUC.Parent = kbbtn
+
+            local kbbtnStroke = Instance.new("UIStroke")
+            kbbtnStroke.Color = theme.border
+            kbbtnStroke.Thickness = 1
+            kbbtnStroke.Parent = kbbtn
+
+            kbbtn.MouseButton1Click:Connect(function()
+                if listening then return end
+                listening = true
+                kbbtn.Text = "..."
+                kbbtn.TextColor3 = theme.textMuted
+                kbbtnStroke.Color = theme.accent
+
+                local conn
+                conn = UIS.InputBegan:Connect(function(input, gp)
+                    if gp then return end
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        currentKey = input.KeyCode
+                        local keyName = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                        kbbtn.Text = keyName
+                        kbbtn.TextColor3 = theme.accent
+                        kbbtnStroke.Color = theme.border
+                        listening = false
+                        conn:Disconnect()
+                        if callback then callback(currentKey) end
+                    end
+                end)
+            end)
+
+            -- trigger callback when key is pressed during gameplay
+            UIS.InputBegan:Connect(function(input, gp)
+                if gp then return end
+                if not listening and input.KeyCode == currentKey then
+                    if callback then callback(currentKey) end
+                end
+            end)
+        end
+
+        -- =====================================================
+        -- COLORPICKER
+        -- sec:ColorPicker(name, default, callback)
+        -- default = Color3.fromRGB(255,0,0)
+        -- callback получает Color3
+        -- =====================================================
+        function sec:ColorPicker(name, default, callback)
+            local currentColor = default or Color3.fromRGB(255, 0, 0)
+            local open = false
+            local hue, sat, val = Color3.toHSV(currentColor)
+
+            local cprow = Instance.new("Frame")
+            cprow.Name = "cprow"
+            cprow.Parent = workareamain
+            cprow.BackgroundTransparency = 1
+            cprow.Size = UDim2.new(0, 418, 0, 37)
+            cprow.ClipsDescendants = false
+
+            local cpLayout = Instance.new("UIListLayout")
+            cpLayout.Parent = cprow
+            cpLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            cpLayout.Padding = UDim.new(0, 6)
+
+            -- header row
+            local cpheader = Instance.new("Frame")
+            cpheader.Parent = cprow
+            cpheader.BackgroundTransparency = 1
+            cpheader.Size = UDim2.new(0, 418, 0, 37)
+            cpheader.LayoutOrder = 0
+
+            local cplabel = Instance.new("TextLabel")
+            cplabel.Parent = cpheader
+            cplabel.BackgroundTransparency = 1
+            cplabel.Size = UDim2.new(0.7, 0, 1, 0)
+            cplabel.Font = Enum.Font.Gotham
+            cplabel.Text = name
+            cplabel.TextColor3 = theme.textPrimary
+            cplabel.TextSize = 21
+            cplabel.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- preview swatch + open button
+            local cpbtn = Instance.new("TextButton")
+            cpbtn.Parent = cpheader
+            cpbtn.AnchorPoint = Vector2.new(1, 0.5)
+            cpbtn.Position = UDim2.new(1, 0, 0.5, 0)
+            cpbtn.Size = UDim2.new(0, 90, 0, 28)
+            cpbtn.BackgroundColor3 = currentColor
+            cpbtn.AutoButtonColor = false
+            cpbtn.Font = Enum.Font.Gotham
+            cpbtn.Text = ""
+            cpbtn.ZIndex = 3
+
+            local cpbtnUC = Instance.new("UICorner")
+            cpbtnUC.CornerRadius = UDim.new(0, 7)
+            cpbtnUC.Parent = cpbtn
+
+            local cpbtnStroke = Instance.new("UIStroke")
+            cpbtnStroke.Color = theme.border
+            cpbtnStroke.Thickness = 1
+            cpbtnStroke.Parent = cpbtn
+
+            -- picker panel
+            local panel = Instance.new("Frame")
+            panel.Name = "cpanel"
+            panel.Parent = cprow
+            panel.BackgroundColor3 = theme.elevated
+            panel.Size = UDim2.new(0, 418, 0, 150)
+            panel.Visible = false
+            panel.ZIndex = 5
+            panel.LayoutOrder = 1
+            panel.ClipsDescendants = true
+
+            local panelUC = Instance.new("UICorner")
+            panelUC.CornerRadius = UDim.new(0, 10)
+            panelUC.Parent = panel
+
+            local panelStroke = Instance.new("UIStroke")
+            panelStroke.Color = theme.border
+            panelStroke.Thickness = 1
+            panelStroke.Parent = panel
+
+            -- SV square (sat/val picker) — 130x130
+            local svFrame = Instance.new("ImageLabel")
+            svFrame.Parent = panel
+            svFrame.Position = UDim2.new(0, 8, 0, 8)
+            svFrame.Size = UDim2.new(0, 130, 0, 130)
+            svFrame.ZIndex = 6
+            -- White → Hue gradient
+            svFrame.Image = "rbxassetid://6020299385" -- sat/val picker image
+            svFrame.ImageColor3 = Color3.fromHSV(hue, 1, 1)
+
+            local svUC = Instance.new("UICorner")
+            svUC.CornerRadius = UDim.new(0, 6)
+            svUC.Parent = svFrame
+
+            -- SV cursor
+            local svCursor = Instance.new("Frame")
+            svCursor.Parent = svFrame
+            svCursor.AnchorPoint = Vector2.new(0.5, 0.5)
+            svCursor.Size = UDim2.new(0, 10, 0, 10)
+            svCursor.Position = UDim2.new(sat, 0, 1 - val, 0)
+            svCursor.BackgroundColor3 = Color3.fromRGB(255,255,255)
+            svCursor.ZIndex = 8
+            svCursor.BorderSizePixel = 0
+
+            local svCursorUC = Instance.new("UICorner")
+            svCursorUC.CornerRadius = UDim.new(1, 0)
+            svCursorUC.Parent = svCursor
+
+            local svCursorStroke = Instance.new("UIStroke")
+            svCursorStroke.Color = Color3.fromRGB(0,0,0)
+            svCursorStroke.Thickness = 1.5
+            svCursorStroke.Parent = svCursor
+
+            -- Hue bar — vertical, right of SV
+            local hueBar = Instance.new("ImageLabel")
+            hueBar.Parent = panel
+            hueBar.Position = UDim2.new(0, 148, 0, 8)
+            hueBar.Size = UDim2.new(0, 18, 0, 130)
+            hueBar.ZIndex = 6
+            hueBar.Image = "rbxassetid://6020299385" -- we'll override with gradient
+            hueBar.Image = "" -- use UIGradient instead
+
+            local hueBarUC = Instance.new("UICorner")
+            hueBarUC.CornerRadius = UDim.new(0, 5)
+            hueBarUC.Parent = hueBar
+
+            -- rainbow gradient for hue bar
+            local hueGrad = Instance.new("UIGradient")
+            hueGrad.Parent = hueBar
+            hueGrad.Rotation = 90
+            hueGrad.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0,    Color3.fromHSV(0,   1, 1)),
+                ColorSequenceKeypoint.new(0.167,Color3.fromHSV(0.167,1,1)),
+                ColorSequenceKeypoint.new(0.333,Color3.fromHSV(0.333,1,1)),
+                ColorSequenceKeypoint.new(0.5,  Color3.fromHSV(0.5, 1, 1)),
+                ColorSequenceKeypoint.new(0.667,Color3.fromHSV(0.667,1,1)),
+                ColorSequenceKeypoint.new(0.833,Color3.fromHSV(0.833,1,1)),
+                ColorSequenceKeypoint.new(1,    Color3.fromHSV(1,   1, 1)),
+            })
+
+            -- Hue cursor
+            local hueCursor = Instance.new("Frame")
+            hueCursor.Parent = hueBar
+            hueCursor.AnchorPoint = Vector2.new(0.5, 0.5)
+            hueCursor.Size = UDim2.new(1.4, 0, 0, 5)
+            hueCursor.Position = UDim2.new(0.5, 0, hue, 0)
+            hueCursor.BackgroundColor3 = Color3.fromRGB(255,255,255)
+            hueCursor.ZIndex = 8
+            hueCursor.BorderSizePixel = 0
+
+            local hueCursorUC = Instance.new("UICorner")
+            hueCursorUC.CornerRadius = UDim.new(0, 3)
+            hueCursorUC.Parent = hueCursor
+
+            -- hex label + big preview
+            local bigPreview = Instance.new("Frame")
+            bigPreview.Parent = panel
+            bigPreview.Position = UDim2.new(0, 178, 0, 8)
+            bigPreview.Size = UDim2.new(0, 50, 0, 50)
+            bigPreview.BackgroundColor3 = currentColor
+            bigPreview.ZIndex = 6
+
+            local bigPrevUC = Instance.new("UICorner")
+            bigPrevUC.CornerRadius = UDim.new(0, 8)
+            bigPrevUC.Parent = bigPreview
+
+            local hexLabel = Instance.new("TextLabel")
+            hexLabel.Parent = panel
+            hexLabel.Position = UDim2.new(0, 178, 0, 66)
+            hexLabel.Size = UDim2.new(0, 230, 0, 22)
+            hexLabel.BackgroundTransparency = 1
+            hexLabel.Font = Enum.Font.GothamMedium
+            hexLabel.TextSize = 14
+            hexLabel.TextColor3 = theme.textMuted
+            hexLabel.TextXAlignment = Enum.TextXAlignment.Left
+            hexLabel.ZIndex = 6
+
+            local function colorToHex(c)
+                return string.format("#%02X%02X%02X",
+                    math.floor(c.R*255),
+                    math.floor(c.G*255),
+                    math.floor(c.B*255))
+            end
+
+            local function applyColor()
+                currentColor = Color3.fromHSV(hue, sat, val)
+                cpbtn.BackgroundColor3 = currentColor
+                bigPreview.BackgroundColor3 = currentColor
+                svFrame.ImageColor3 = Color3.fromHSV(hue, 1, 1)
+                hexLabel.Text = colorToHex(currentColor)
+                if callback then callback(currentColor) end
+            end
+            applyColor()
+
+            -- SV drag
+            local draggingSV = false
+            local UIS = game:GetService("UserInputService")
+
+            svFrame.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingSV = true
+                    local rel = input.Position - svFrame.AbsolutePosition
+                    sat = math.clamp(rel.X / svFrame.AbsoluteSize.X, 0, 1)
+                    val = 1 - math.clamp(rel.Y / svFrame.AbsoluteSize.Y, 0, 1)
+                    svCursor.Position = UDim2.new(sat, 0, 1 - val, 0)
+                    applyColor()
+                end
+            end)
+
+            -- Hue bar drag
+            local draggingHue = false
+            hueBar.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingHue = true
+                    local relY = input.Position.Y - hueBar.AbsolutePosition.Y
+                    hue = math.clamp(relY / hueBar.AbsoluteSize.Y, 0, 1)
+                    hueCursor.Position = UDim2.new(0.5, 0, hue, 0)
+                    applyColor()
+                end
+            end)
+
+            UIS.InputChanged:Connect(function(input)
+                if input.UserInputType ~= Enum.UserInputType.MouseMovement then return end
+                if draggingSV then
+                    local rel = input.Position - svFrame.AbsolutePosition
+                    sat = math.clamp(rel.X / svFrame.AbsoluteSize.X, 0, 1)
+                    val = 1 - math.clamp(rel.Y / svFrame.AbsoluteSize.Y, 0, 1)
+                    svCursor.Position = UDim2.new(sat, 0, 1 - val, 0)
+                    applyColor()
+                elseif draggingHue then
+                    local relY = input.Position.Y - hueBar.AbsolutePosition.Y
+                    hue = math.clamp(relY / hueBar.AbsoluteSize.Y, 0, 1)
+                    hueCursor.Position = UDim2.new(0.5, 0, hue, 0)
+                    applyColor()
+                end
+            end)
+
+            UIS.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    draggingSV = false
+                    draggingHue = false
+                end
+            end)
+
+            -- toggle open
+            cpbtn.MouseButton1Click:Connect(function()
+                open = not open
+                panel.Visible = open
+                if open then
+                    cprow.Size = UDim2.new(0, 418, 0, 37 + 6 + 150)
+                    cpbtnStroke.Color = theme.accent
+                else
+                    cprow.Size = UDim2.new(0, 418, 0, 37)
+                    cpbtnStroke.Color = theme.border
+                end
+            end)
+        end
+
         sidebar2.MouseButton1Click:Connect(function()
             sec:Select()
         end)
