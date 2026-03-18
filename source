@@ -11,29 +11,16 @@ local function tp(ins, pos, time, thing)
     game:GetService("TweenService"):Create(ins, TweenInfo.new(time, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut),{Position = pos}):Play()
 end
 
--- Dark theme colors
-local theme = {
-    bg          = Color3.fromRGB(18, 18, 22),        -- основной фон
-    surface     = Color3.fromRGB(26, 26, 32),        -- поверхности (workarea, notif)
-    elevated    = Color3.fromRGB(34, 34, 42),        -- поднятые элементы (search, textfield)
-    border      = Color3.fromRGB(50, 50, 62),        -- обводки
-    accent      = Color3.fromRGB(99, 102, 241),      -- акцент (вместо синего)
-    accentHover = Color3.fromRGB(79, 82, 221),
-    textPrimary = Color3.fromRGB(230, 230, 240),     -- основной текст
-    textMuted   = Color3.fromRGB(120, 120, 145),     -- приглушённый текст
-    close       = Color3.fromRGB(255, 95, 87),
-    minimize    = Color3.fromRGB(255, 189, 46),
-    maximize    = Color3.fromRGB(40, 205, 65),
-    shadow      = Color3.fromRGB(0, 0, 0),
-}
-
 function lib:init(ti, dosplash, visiblekey, deleteprevious)
     if syn then
-        cg = game:GetService("CoreGui")
+        
+         cg = game:GetService("CoreGui")
         if cg:FindFirstChild("ScreenGui") and deleteprevious then
-            tp(cg.ScreenGui.main, cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), 0.5)
+           tp(cg.ScreenGui.main, cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), 0.5)
             game:GetService("Debris"):AddItem(cg.ScreenGui, 1)
-        end
+      end
+
+         -- main
         scrgui = Instance.new("ScreenGui")
         syn.protect_gui(scrgui)
         scrgui.Parent = game:GetService("CoreGui")
@@ -42,7 +29,9 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             gethui().ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
             game:GetService("Debris"):AddItem(gethui().ScreenGui, 1)
         end
-        scrgui = Instance.new("ScreenGui")
+
+        -- main
+         scrgui = Instance.new("ScreenGui")
         scrgui.Parent = gethui()
     else
         cg = game:GetService("CoreGui")
@@ -50,17 +39,19 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             tp(cg.ScreenGui.main, cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), 0.5)
             game:GetService("Debris"):AddItem(cg.ScreenGui, 1)
         end
-        scrgui = Instance.new("ScreenGui")
+         scrgui = Instance.new("ScreenGui")
         scrgui.Parent = cg
     end
+        
+    
 
     if dosplash then
         local splash = Instance.new("Frame")
         splash.Name = "splash"
         splash.Parent = scrgui
         splash.AnchorPoint = Vector2.new(0.5, 0.5)
-        splash.BackgroundColor3 = theme.surface
-        splash.BackgroundTransparency = 0.1
+        splash.BackgroundColor3 = Color3.fromRGB(20, 20, 26)  -- было 255,255,255
+        splash.BackgroundTransparency = 0.600
         splash.Position = UDim2.new(0.5, 0, 2, 0)
         splash.Size = UDim2.new(0, 340, 0, 340)
         splash.Visible = true
@@ -74,7 +65,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         sicon.Name = "sicon"
         sicon.Parent = splash
         sicon.AnchorPoint = Vector2.new(0.5, 0.5)
-        sicon.BackgroundColor3 = theme.surface
+        sicon.BackgroundColor3 = Color3.fromRGB(20, 20, 26)  -- было 255,255,255
         sicon.BackgroundTransparency = 1
         sicon.Position = UDim2.new(0.5, 0, 0.5, 0)
         sicon.Size = UDim2.new(0, 191, 0, 190)
@@ -84,12 +75,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         sicon.TileSize = UDim2.new(1, 0, 20, 0)
 
         local ug = Instance.new("UIGradient")
-        ug.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(180, 180, 220)),
-            ColorSequenceKeypoint.new(0.01, Color3.fromRGB(140, 140, 180)),
-            ColorSequenceKeypoint.new(0.47, Color3.fromRGB(99, 102, 241)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(60, 60, 160))
-        }
+        ug.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.01, Color3.fromRGB(61, 61, 61)), ColorSequenceKeypoint.new(0.47, Color3.fromRGB(41, 41, 41)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
         ug.Rotation = 90
         ug.Parent = sicon
 
@@ -102,21 +88,22 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         sshadow.Size = UDim2.new(1.20000005, 0, 1.20000005, 0)
         sshadow.ZIndex = 39
         sshadow.Image = "rbxassetid://313486536"
-        sshadow.ImageColor3 = theme.shadow
-        sshadow.ImageTransparency = 0.200
+        sshadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+        sshadow.ImageTransparency = 0.400
         sshadow.TileSize = UDim2.new(0, 1, 0, 1)
         splash:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), "InOut", "Quart", 1)
         wait(2)
         splash:TweenPosition(UDim2.new(0.5, 0, 2, 0), "InOut", "Quart", 1)
         game:GetService("Debris"):AddItem(splash, 1)
     end
+        
 
     local main = Instance.new("Frame")
     main.Name = "main"
     main.Parent = scrgui
     main.AnchorPoint = Vector2.new(0.5, 0.5)
-    main.BackgroundColor3 = theme.bg
-    main.BackgroundTransparency = 0.05
+    main.BackgroundColor3 = Color3.fromRGB(18, 18, 22)        -- было 255,255,255
+    main.BackgroundTransparency = 0.150
     main.Position = UDim2.new(0.5, 0, 2, 0)
     main.Size = UDim2.new(0, 721, 0, 584)
 
@@ -124,28 +111,23 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     uc.CornerRadius = UDim.new(0, 18)
     uc.Parent = main
 
-    -- Тонкая обводка для тёмного окна
-    local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = theme.border
-    mainStroke.Thickness = 1
-    mainStroke.Parent = main
-
-    local UserInputService = game:GetService("UserInputService")
+    local UserInputService = game:GetService("UserInputService") --- skidded ik
     local dragging
     local dragInput
     local dragStart
     local startPos
-
+    
     local function update(input)
         local delta = input.Position - dragStart
         main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
-
+    
     main.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
             startPos = main.Position
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -153,13 +135,13 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             end)
         end
     end)
-
+    
     main.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
-
+    
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             update(input)
@@ -167,10 +149,11 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     end)
 
     -- workarea right side setup
+
     local workarea = Instance.new("Frame")
     workarea.Name = "workarea"
     workarea.Parent = main
-    workarea.BackgroundColor3 = theme.surface
+    workarea.BackgroundColor3 = Color3.fromRGB(26, 26, 32)    -- было 255,255,255
     workarea.Position = UDim2.new(0.36403501, 0, 0, 0)
     workarea.Size = UDim2.new(0, 458, 0, 584)
 
@@ -181,22 +164,19 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     local workareacornerhider = Instance.new("Frame")
     workareacornerhider.Name = "workareacornerhider"
     workareacornerhider.Parent = workarea
-    workareacornerhider.BackgroundColor3 = theme.surface
+    workareacornerhider.BackgroundColor3 = Color3.fromRGB(26, 26, 32)  -- было 255,255,255
     workareacornerhider.BorderSizePixel = 0
     workareacornerhider.Size = UDim2.new(0, 18, 0.99895674, 0)
 
+
     -- searchbar
+
     local search = Instance.new("Frame")
     search.Name = "search"
     search.Parent = main
-    search.BackgroundColor3 = theme.elevated
+    search.BackgroundColor3 = Color3.fromRGB(34, 34, 42)      -- было 255,255,255
     search.Position = UDim2.new(0.0256588068, 0, 0.0958904102, 0)
     search.Size = UDim2.new(0, 225, 0, 34)
-
-    local searchStroke = Instance.new("UIStroke")
-    searchStroke.Color = theme.border
-    searchStroke.Thickness = 1
-    searchStroke.Parent = search
 
     local uc_8 = Instance.new("UICorner")
     uc_8.CornerRadius = UDim.new(0, 9)
@@ -205,19 +185,19 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     local searchicon = Instance.new("ImageButton")
     searchicon.Name = "searchicon"
     searchicon.Parent = search
-    searchicon.BackgroundColor3 = theme.elevated
+    searchicon.BackgroundColor3 = Color3.fromRGB(34, 34, 42)  -- было 255,255,255
     searchicon.BackgroundTransparency = 1
-    searchicon.BorderColor3 = theme.border
+    searchicon.BorderColor3 = Color3.fromRGB(27, 42, 53)
     searchicon.Position = UDim2.new(0.0379999988, -2, 0.138999999, 2)
     searchicon.Size = UDim2.new(0, 24, 0, 21)
     searchicon.Image = "rbxassetid://2804603863"
-    searchicon.ImageColor3 = theme.textMuted
+    searchicon.ImageColor3 = Color3.fromRGB(120, 120, 145)    -- было 95,95,95
     searchicon.ScaleType = Enum.ScaleType.Fit
 
     local searchtextbox = Instance.new("TextBox")
     searchtextbox.Name = "searchtextbox"
     searchtextbox.Parent = search
-    searchtextbox.BackgroundColor3 = theme.elevated
+    searchtextbox.BackgroundColor3 = Color3.fromRGB(34, 34, 42)  -- было 255,255,255
     searchtextbox.BackgroundTransparency = 1
     searchtextbox.ClipsDescendants = true
     searchtextbox.Position = UDim2.new(0.180257514, 0, -0.0162218884, 0)
@@ -225,9 +205,8 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     searchtextbox.Font = Enum.Font.Gotham
     searchtextbox.LineHeight = 0.870
     searchtextbox.PlaceholderText = "Search"
-    searchtextbox.PlaceholderColor3 = theme.textMuted
     searchtextbox.Text = ""
-    searchtextbox.TextColor3 = theme.textPrimary
+    searchtextbox.TextColor3 = Color3.fromRGB(200, 200, 215)  -- было 95,95,95
     searchtextbox.TextSize = 22
     searchtextbox.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -236,11 +215,12 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     end)
 
     -- sidebar
+
     local sidebar = Instance.new("ScrollingFrame")
     sidebar.Name = "sidebar"
     sidebar.Parent = main
     sidebar.Active = true
-    sidebar.BackgroundColor3 = theme.bg
+    sidebar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)     -- было 255,255,255
     sidebar.BackgroundTransparency = 1
     sidebar.BorderSizePixel = 0
     sidebar.Position = UDim2.new(0.0249653254, 0, 0.181506842, 0)
@@ -248,15 +228,14 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     sidebar.AutomaticCanvasSize = "Y"
     sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
     sidebar.ScrollBarThickness = 2
-    sidebar.ScrollBarImageColor3 = theme.border
 
     local ull_2 = Instance.new("UIListLayout")
     ull_2.Parent = sidebar
     ull_2.SortOrder = Enum.SortOrder.LayoutOrder
     ull_2.Padding = UDim.new(0, 5)
 
-    game:GetService("RunService"):BindToRenderStep("search", 1, function()
-        if not searchtextbox:IsFocused() then
+    game:GetService("RunService"):BindToRenderStep("search", 1, function() -- i sure do love skidding
+        if not searchtextbox:IsFocused() then 
             for b,v in next, sidebar:GetChildren() do
                 if not v:IsA("TextButton") then return end
                 v.Visible = true
@@ -273,12 +252,13 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             end
         end
     end)
+    -- macos style buttons
 
-    -- macOS style buttons
+
     local buttons = Instance.new("Frame")
     buttons.Name = "buttons"
     buttons.Parent = main
-    buttons.BackgroundColor3 = theme.bg
+    buttons.BackgroundColor3 = Color3.fromRGB(18, 18, 22)     -- было 255,255,255
     buttons.BackgroundTransparency = 1
     buttons.Size = UDim2.new(0, 105, 0, 57)
 
@@ -290,10 +270,11 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     ull_3.VerticalAlignment = Enum.VerticalAlignment.Center
     ull_3.Padding = UDim.new(0, 10)
 
+
     local close = Instance.new("TextButton")
     close.Name = "close"
     close.Parent = buttons
-    close.BackgroundColor3 = theme.close
+    close.BackgroundColor3 = Color3.fromRGB(254, 94, 86)
     close.Size = UDim2.new(0, 16, 0, 16)
     close.AutoButtonColor = false
     close.Font = Enum.Font.SourceSans
@@ -304,14 +285,16 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         scrgui:Destroy()
     end)
 
+
     local uc_18 = Instance.new("UICorner")
     uc_18.CornerRadius = UDim.new(1, 0)
     uc_18.Parent = close
 
+
     local minimize = Instance.new("TextButton")
     minimize.Name = "minimize"
     minimize.Parent = buttons
-    minimize.BackgroundColor3 = theme.minimize
+    minimize.BackgroundColor3 = Color3.fromRGB(255, 189, 46)
     minimize.Size = UDim2.new(0, 16, 0, 16)
     minimize.AutoButtonColor = false
     minimize.Font = Enum.Font.SourceSans
@@ -319,14 +302,16 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     minimize.TextColor3 = Color3.fromRGB(255, 50, 50)
     minimize.TextSize = 14
 
+
     local uc_19 = Instance.new("UICorner")
     uc_19.CornerRadius = UDim.new(1, 0)
     uc_19.Parent = minimize
 
+
     local resize = Instance.new("TextButton")
     resize.Name = "resize"
     resize.Parent = buttons
-    resize.BackgroundColor3 = theme.maximize
+    resize.BackgroundColor3 = Color3.fromRGB(39, 200, 63)
     resize.Size = UDim2.new(0, 16, 0, 16)
     resize.AutoButtonColor = false
     resize.Font = Enum.Font.SourceSans
@@ -339,17 +324,19 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     uc_20.Parent = resize
 
     -- title text at topbar
+
+
     local title = Instance.new("TextLabel")
     title.Name = "title"
     title.Parent = main
-    title.BackgroundColor3 = theme.bg
+    title.BackgroundColor3 = Color3.fromRGB(18, 18, 22)       -- было 255,255,255
     title.BackgroundTransparency = 1
     title.BorderSizePixel = 2
     title.Position = UDim2.new(0.389000326, 0, 0.0351027399, 0)
     title.Size = UDim2.new(0, 400, 0, 15)
     title.Font = Enum.Font.Gotham
     title.LineHeight = 1.180
-    title.TextColor3 = theme.textPrimary
+    title.TextColor3 = Color3.fromRGB(230, 230, 240)          -- было 0,0,0
     title.TextSize = 28
     title.TextWrapped = true
     title.TextXAlignment = Enum.TextXAlignment.Left
@@ -359,16 +346,11 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     notif.Name = "notif"
     notif.Parent = main
     notif.AnchorPoint = Vector2.new(0.5, 0.5)
-    notif.BackgroundColor3 = theme.surface
+    notif.BackgroundColor3 = Color3.fromRGB(26, 26, 32)       -- было 255,255,255
     notif.Position = UDim2.new(0.5, 0, 0.5, 0)
     notif.Size = UDim2.new(0, 304, 0, 362)
     notif.Visible = false
     notif.ZIndex = 3
-
-    local notifStroke = Instance.new("UIStroke")
-    notifStroke.Color = theme.border
-    notifStroke.Thickness = 1
-    notifStroke.Parent = notif
 
     local uc_11 = Instance.new("UICorner")
     uc_11.CornerRadius = UDim.new(0, 18)
@@ -377,18 +359,18 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     local notificon = Instance.new("ImageLabel")
     notificon.Name = "notificon"
     notificon.Parent = notif
-    notificon.BackgroundColor3 = theme.surface
+    notificon.BackgroundColor3 = Color3.fromRGB(26, 26, 32)   -- было 255,255,255
     notificon.BackgroundTransparency = 1
     notificon.Position = UDim2.new(0.335526317, 0, 0.0994475111, 0)
     notificon.Size = UDim2.new(0, 100, 0, 100)
     notificon.ZIndex = 3
     notificon.Image = "rbxassetid://4871684504"
-    notificon.ImageColor3 = theme.textMuted
+    notificon.ImageColor3 = Color3.fromRGB(120, 120, 145)     -- было 95,95,95
 
     local notifbutton1 = Instance.new("TextButton")
     notifbutton1.Name = "notifbutton1"
     notifbutton1.Parent = notif
-    notifbutton1.BackgroundColor3 = theme.accent
+    notifbutton1.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
     notifbutton1.Position = UDim2.new(0.0559210554, 0, 0.817679524, 0)
     notifbutton1.Size = UDim2.new(0, 270, 0, 50)
     notifbutton1.ZIndex = 3
@@ -409,15 +391,14 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     notifshadow.Position = UDim2.new(0.5, 0, 0.5, 0)
     notifshadow.Size = UDim2.new(1.20000005, 0, 1.20000005, 0)
     notifshadow.Image = "rbxassetid://313486536"
-    notifshadow.ImageColor3 = theme.shadow
-    notifshadow.ImageTransparency = 0.200
+    notifshadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
 
     local notifdarkness = Instance.new("Frame")
     notifdarkness.Name = "notifdarkness"
     notifdarkness.Parent = notif
     notifdarkness.AnchorPoint = Vector2.new(0.5, 0.5)
     notifdarkness.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    notifdarkness.BackgroundTransparency = 0.400
+    notifdarkness.BackgroundTransparency = 0.600
     notifdarkness.Position = UDim2.new(0.5, 0, 0.5, 0)
     notifdarkness.Size = UDim2.new(0, 721, 0, 584)
     notifdarkness.ZIndex = 2
@@ -429,45 +410,41 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     local notiftitle = Instance.new("TextLabel")
     notiftitle.Name = "notiftitle"
     notiftitle.Parent = notif
-    notiftitle.BackgroundColor3 = theme.surface
+    notiftitle.BackgroundColor3 = Color3.fromRGB(26, 26, 32)  -- было 255,255,255
     notiftitle.BackgroundTransparency = 1
     notiftitle.Position = UDim2.new(0.167763159, 0, 0.375690609, 0)
     notiftitle.Size = UDim2.new(0, 200, 0, 50)
     notiftitle.ZIndex = 3
     notiftitle.Font = Enum.Font.GothamMedium
     notiftitle.Text = "Notice"
-    notiftitle.TextColor3 = theme.textPrimary
+    notiftitle.TextColor3 = Color3.fromRGB(200, 200, 215)     -- было 95,95,95
     notiftitle.TextSize = 28
 
     local notiftext = Instance.new("TextLabel")
     notiftext.Name = "notiftext"
     notiftext.Parent = notif
-    notiftext.BackgroundColor3 = theme.surface
+    notiftext.BackgroundColor3 = Color3.fromRGB(26, 26, 32)   -- было 255,255,255
     notiftext.BackgroundTransparency = 1
     notiftext.Position = UDim2.new(0.0822368413, 0, 0.513812184, 0)
     notiftext.Size = UDim2.new(0, 254, 0, 66)
     notiftext.ZIndex = 3
     notiftext.Font = Enum.Font.Gotham
     notiftext.Text = "We would like to contact you regarding your car's extended warranty."
-    notiftext.TextColor3 = theme.textMuted
+    notiftext.TextColor3 = Color3.fromRGB(120, 120, 145)      -- было 95,95,95
     notiftext.TextSize = 16
     notiftext.TextWrapped = true
 
     -- notifcation 2 (two button)
+
     local notif2 = Instance.new("Frame")
     notif2.Name = "notif2"
     notif2.Parent = main
     notif2.AnchorPoint = Vector2.new(0.5, 0.5)
-    notif2.BackgroundColor3 = theme.surface
+    notif2.BackgroundColor3 = Color3.fromRGB(26, 26, 32)      -- было 255,255,255
     notif2.Position = UDim2.new(0.5, 0, 0.5, 0)
     notif2.Size = UDim2.new(0, 304, 0, 362)
     notif2.Visible = false
     notif2.ZIndex = 3
-
-    local notif2Stroke = Instance.new("UIStroke")
-    notif2Stroke.Color = theme.border
-    notif2Stroke.Thickness = 1
-    notif2Stroke.Parent = notif2
 
     local uc_14 = Instance.new("UICorner")
     uc_14.CornerRadius = UDim.new(0, 18)
@@ -476,45 +453,47 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     local notif2icon = Instance.new("ImageLabel")
     notif2icon.Name = "notif2icon"
     notif2icon.Parent = notif2
-    notif2icon.BackgroundColor3 = theme.surface
+    notif2icon.BackgroundColor3 = Color3.fromRGB(26, 26, 32)  -- было 255,255,255
     notif2icon.BackgroundTransparency = 1
     notif2icon.Position = UDim2.new(0.335526317, 0, 0.0994475111, 0)
     notif2icon.Size = UDim2.new(0, 100, 0, 100)
     notif2icon.ZIndex = 3
     notif2icon.Image = "rbxassetid://12608260095"
-    notif2icon.ImageColor3 = theme.textMuted
+    notif2icon.ImageColor3 = Color3.fromRGB(120, 120, 145)    -- было 95,95,95
 
     local notif2title = Instance.new("TextLabel")
     notif2title.Name = "notif2title"
     notif2title.Parent = notif2
-    notif2title.BackgroundColor3 = theme.surface
+    notif2title.BackgroundColor3 = Color3.fromRGB(26, 26, 32) -- было 255,255,255
     notif2title.BackgroundTransparency = 1
     notif2title.Position = UDim2.new(0.167763159, 0, 0.375690609, 0)
     notif2title.Size = UDim2.new(0, 200, 0, 50)
     notif2title.ZIndex = 3
     notif2title.Font = Enum.Font.GothamMedium
     notif2title.Text = "Notice"
-    notif2title.TextColor3 = theme.textPrimary
+    notif2title.TextColor3 = Color3.fromRGB(200, 200, 215)    -- было 95,95,95
     notif2title.TextSize = 28
+
 
     local notif2text = Instance.new("TextLabel")
     notif2text.Name = "notif2text"
     notif2text.Parent = notif2
-    notif2text.BackgroundColor3 = theme.surface
+    notif2text.BackgroundColor3 = Color3.fromRGB(26, 26, 32)  -- было 255,255,255
     notif2text.BackgroundTransparency = 1
     notif2text.Position = UDim2.new(0.0822368413, 0, 0.513812184, 0)
     notif2text.Size = UDim2.new(0, 254, 0, 66)
     notif2text.ZIndex = 3
     notif2text.Font = Enum.Font.Gotham
     notif2text.Text = "We would like to contact you regarding your car's extended warranty."
-    notif2text.TextColor3 = theme.textMuted
+    notif2text.TextColor3 = Color3.fromRGB(120, 120, 145)     -- было 95,95,95
     notif2text.TextSize = 16
     notif2text.TextWrapped = true
+
 
     local notif2button1 = Instance.new("TextButton")
     notif2button1.Name = "notif2button1"
     notif2button1.Parent = notif2
-    notif2button1.BackgroundColor3 = theme.accent
+    notif2button1.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
     notif2button1.Position = UDim2.new(0.0559210517, 0, 0.715469658, 0)
     notif2button1.Size = UDim2.new(0, 270, 0, 40)
     notif2button1.ZIndex = 3
@@ -527,6 +506,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     uc_15.CornerRadius = UDim.new(0, 9)
     uc_15.Parent = notif2button1
 
+
     local notif2shadow = Instance.new("ImageLabel")
     notif2shadow.Name = "notif2shadow"
     notif2shadow.Parent = notif2
@@ -535,35 +515,38 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     notif2shadow.Position = UDim2.new(0.5, 0, 0.5, 0)
     notif2shadow.Size = UDim2.new(1.20000005, 0, 1.20000005, 0)
     notif2shadow.Image = "rbxassetid://313486536"
-    notif2shadow.ImageColor3 = theme.shadow
-    notif2shadow.ImageTransparency = 0.200
+    notif2shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+
 
     local notif2darkness = Instance.new("Frame")
     notif2darkness.Name = "notif2darkness"
     notif2darkness.Parent = notif2
     notif2darkness.AnchorPoint = Vector2.new(0.5, 0.5)
     notif2darkness.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    notif2darkness.BackgroundTransparency = 0.400
+    notif2darkness.BackgroundTransparency = 0.600
     notif2darkness.Position = UDim2.new(0.5, 0, 0.5, 0)
     notif2darkness.Size = UDim2.new(0, 721, 0, 584)
     notif2darkness.ZIndex = 2
+
 
     local uc_16 = Instance.new("UICorner")
     uc_16.CornerRadius = UDim.new(0, 18)
     uc_16.Parent = notif2darkness
 
+
     local notif2button2 = Instance.new("TextButton")
     notif2button2.Name = "notif2button2"
     notif2button2.Parent = notif2
-    notif2button2.BackgroundColor3 = theme.accent
+    notif2button2.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
     notif2button2.BackgroundTransparency = 1
     notif2button2.Position = UDim2.new(0.0526315793, 0, 0.842541456, 0)
     notif2button2.Size = UDim2.new(0, 270, 0, 40)
     notif2button2.ZIndex = 3
     notif2button2.Font = Enum.Font.Gotham
     notif2button2.Text = "Go away."
-    notif2button2.TextColor3 = theme.textMuted
+    notif2button2.TextColor3 = Color3.fromRGB(120, 120, 145)  -- было 95,95,95
     notif2button2.TextSize = 21
+
 
     local uc_17 = Instance.new("UICorner")
     uc_17.CornerRadius = UDim.new(0, 9)
@@ -574,7 +557,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     else
         title.Text = ""
     end
-    tp(main, UDim2.new(0.5, 0, 0.5, 0), 1)
+       tp(main, UDim2.new(0.5, 0, 0.5, 0), 1)
     window = {}
 
     function window:ToggleVisible()
@@ -612,7 +595,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
 
     function window:TempNotify(text1, text2, icon)
         for b,v in next, scrgui:GetChildren() do
-            if v.Name == "tempnotif" then
+            if v.Name == "tempnotif" then 
                 v.Position += UDim2.new(0,0,0,130)
             end
         end
@@ -620,8 +603,8 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         tempnotif.Name = "tempnotif"
         tempnotif.Parent = scrgui
         tempnotif.AnchorPoint = Vector2.new(0.5, 0.5)
-        tempnotif.BackgroundColor3 = theme.surface
-        tempnotif.BackgroundTransparency = 0.05
+        tempnotif.BackgroundColor3 = Color3.fromRGB(26, 26, 32)   -- было 255,255,255
+        tempnotif.BackgroundTransparency = 0.150
         tempnotif.Position = UDim2.new(1, -250, 0.0794737339, 0)
         tempnotif.Size = UDim2.new(0, 447, 0, 117)
         tempnotif.Visible = true
@@ -631,52 +614,50 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         uc_21.CornerRadius = UDim.new(0, 18)
         uc_21.Parent = tempnotif
 
-        local tnotifStroke = Instance.new("UIStroke")
-        tnotifStroke.Color = theme.border
-        tnotifStroke.Thickness = 1
-        tnotifStroke.Parent = tempnotif
-
         local t2 = Instance.new("TextLabel")
         t2.Name = "t2"
         t2.Parent = tempnotif
-        t2.BackgroundColor3 = theme.surface
+        t2.BackgroundColor3 = Color3.fromRGB(26, 26, 32)         -- было 255,255,255
         t2.BackgroundTransparency = 1
         t2.Position = UDim2.new(0.236927822, 0, 0.470085472, 0)
         t2.Size = UDim2.new(0, 326, 0, 52)
         t2.ZIndex = 4
         t2.Font = Enum.Font.Gotham
         t2.Text = text2
-        t2.TextColor3 = theme.textMuted
+        t2.TextColor3 = Color3.fromRGB(120, 120, 145)            -- было 95,95,95
         t2.TextSize = 16
         t2.TextWrapped = true
         t2.TextXAlignment = Enum.TextXAlignment.Left
         t2.TextYAlignment = Enum.TextYAlignment.Top
 
+
         local t1 = Instance.new("TextLabel")
         t1.Name = "t1"
         t1.Parent = tempnotif
-        t1.BackgroundColor3 = theme.surface
+        t1.BackgroundColor3 = Color3.fromRGB(26, 26, 32)         -- было 255,255,255
         t1.BackgroundTransparency = 1
         t1.Position = UDim2.new(0.234690696, 0, 0.193464488, 0)
         t1.Size = UDim2.new(0, 327, 0, 25)
         t1.ZIndex = 4
         t1.Font = Enum.Font.GothamMedium
         t1.Text = text1
-        t1.TextColor3 = theme.textPrimary
+        t1.TextColor3 = Color3.fromRGB(200, 200, 215)            -- было 95,95,95
         t1.TextSize = 28
         t1.TextXAlignment = Enum.TextXAlignment.Left
+
 
         local ticon = Instance.new("ImageLabel")
         ticon.Name = "ticon"
         ticon.Parent = tempnotif
-        ticon.BackgroundColor3 = theme.surface
+        ticon.BackgroundColor3 = Color3.fromRGB(26, 26, 32)      -- было 255,255,255
         ticon.BackgroundTransparency = 1
         ticon.Position = UDim2.new(0.0311112702, 0, 0.193464488, 0)
         ticon.Size = UDim2.new(0, 71, 0, 71)
         ticon.ZIndex = 4
         ticon.Image = icon
-        ticon.ImageColor3 = theme.textMuted
+        ticon.ImageColor3 = Color3.fromRGB(120, 120, 145)        -- было 95,95,95
         ticon.ScaleType = Enum.ScaleType.Fit
+
 
         local tshadow = Instance.new("ImageLabel")
         tshadow.Name = "tshadow"
@@ -687,8 +668,8 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         tshadow.Size = UDim2.new(1.12, 0, 1.20000005, 0)
         tshadow.ZIndex = 3
         tshadow.Image = "rbxassetid://313486536"
-        tshadow.ImageColor3 = theme.shadow
-        tshadow.ImageTransparency = 0.100
+        tshadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+        tshadow.ImageTransparency = 0.400
         tshadow.TileSize = UDim2.new(0, 1, 0, 1)
         game:GetService("Debris"):AddItem(tempnotif, 5)
     end
@@ -737,14 +718,14 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         local sidebardivider = Instance.new("TextLabel")
         sidebardivider.Name = "sidebardivider"
         sidebardivider.Parent = sidebar
-        sidebardivider.BackgroundColor3 = theme.bg
+        sidebardivider.BackgroundColor3 = Color3.fromRGB(18, 18, 22)  -- было 255,255,255
         sidebardivider.BackgroundTransparency = 1
         sidebardivider.BorderSizePixel = 2
         sidebardivider.Position = UDim2.new(0, 0, 0.00215982716, 0)
         sidebardivider.Size = UDim2.new(0, 226, 0, 26)
         sidebardivider.Font = Enum.Font.Gotham
         sidebardivider.Text = name
-        sidebardivider.TextColor3 = theme.textMuted
+        sidebardivider.TextColor3 = Color3.fromRGB(120, 120, 145)     -- было 95,95,95
         sidebardivider.TextSize = 21
         sidebardivider.TextWrapped = true
         sidebardivider.TextXAlignment = Enum.TextXAlignment.Left
@@ -755,16 +736,16 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         local sidebar2 = Instance.new("TextButton")
         sidebar2.Name = "sidebar2"
         sidebar2.Parent = sidebar
-        sidebar2.BackgroundColor3 = theme.accent
+        sidebar2.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
         sidebar2.BackgroundTransparency = 1
         sidebar2.Size = UDim2.new(0, 226, 0, 37)
         sidebar2.ZIndex = 2
         sidebar2.AutoButtonColor = false
         sidebar2.Font = Enum.Font.Gotham
         sidebar2.Text = name
-        sidebar2.TextColor3 = theme.textPrimary
+        sidebar2.TextColor3 = Color3.fromRGB(200, 200, 215)           -- было 0,0,0
         sidebar2.TextSize = 21
-
+        
         local uc_10 = Instance.new("UICorner")
         uc_10.CornerRadius = UDim.new(0, 9)
         uc_10.Parent = sidebar2
@@ -774,7 +755,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         workareamain.Name = "workareamain"
         workareamain.Parent = workarea
         workareamain.Active = true
-        workareamain.BackgroundColor3 = theme.surface
+        workareamain.BackgroundColor3 = Color3.fromRGB(26, 26, 32)    -- было 255,255,255
         workareamain.BackgroundTransparency = 1
         workareamain.BorderSizePixel = 0
         workareamain.Position = UDim2.new(0.0393013097, 0, 0.0958904102, 0)
@@ -782,7 +763,6 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         workareamain.ZIndex = 3
         workareamain.CanvasSize = UDim2.new(0, 0, 0, 0)
         workareamain.ScrollBarThickness = 2
-        workareamain.ScrollBarImageColor3 = theme.border
         workareamain.Visible = false
 
         local ull = Instance.new("UIListLayout")
@@ -790,14 +770,14 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         ull.HorizontalAlignment = Enum.HorizontalAlignment.Center
         ull.SortOrder = Enum.SortOrder.LayoutOrder
         ull.Padding = UDim.new(0, 5)
-
+    
         table.insert(workareas, workareamain)
 
         local sec = {}
         function sec:Select()
             for b, v in next, sections do
                 v.BackgroundTransparency = 1
-                v.TextColor3 = theme.textPrimary
+                v.TextColor3 = Color3.fromRGB(200, 200, 215)          -- было 0,0,0
             end
             sidebar2.BackgroundTransparency = 0
             sidebar2.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -806,36 +786,34 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             end
             workareamain.Visible = true
         end
-
         function sec:Divider(name)
             local section = Instance.new("TextLabel")
             section.Name = "section"
             section.Parent = workareamain
-            section.BackgroundColor3 = theme.surface
+            section.BackgroundColor3 = Color3.fromRGB(26, 26, 32)     -- было 255,255,255
             section.BackgroundTransparency = 1
             section.BorderSizePixel = 2
             section.Size = UDim2.new(0, 418, 0, 50)
             section.Font = Enum.Font.Gotham
             section.LineHeight = 1.180
             section.Text = name
-            section.TextColor3 = theme.textPrimary
+            section.TextColor3 = Color3.fromRGB(200, 200, 215)        -- было 0,0,0
             section.TextSize = 25
             section.TextWrapped = true
             section.TextXAlignment = Enum.TextXAlignment.Left
             section.TextYAlignment = Enum.TextYAlignment.Bottom
         end
-
         function sec:Button(name, callback)
             local button = Instance.new("TextButton")
             button.Name = "button"
             button.Text = name
             button.Parent = workareamain
-            button.BackgroundColor3 = theme.elevated
+            button.BackgroundColor3 = Color3.fromRGB(216, 216, 216)
             button.BackgroundTransparency = 1
             button.Size = UDim2.new(0, 418, 0, 37)
             button.ZIndex = 2
             button.Font = Enum.Font.Gotham
-            button.TextColor3 = theme.accent
+            button.TextColor3 = Color3.fromRGB(21, 103, 251)
             button.TextSize = 21
 
             local uc_3 = Instance.new("UICorner")
@@ -844,11 +822,12 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
 
             local us = Instance.new("UIStroke", button)
             us.ApplyStrokeMode = "Border"
-            us.Color = theme.accent
+            us.Color = Color3.fromRGB(21, 103, 251)
             us.Thickness = 1
 
+
             if callback then
-                button.MouseButton1Click:Connect(function()
+                button.MouseButton1Click:Connect(function() 
                     coroutine.wrap(function()
                         button.TextSize -= 3
                         task.wait(0.06)
@@ -863,12 +842,12 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             local label = Instance.new("TextLabel")
             label.Name = "label"
             label.Parent = workareamain
-            label.BackgroundColor3 = theme.surface
+            label.BackgroundColor3 = Color3.fromRGB(26, 26, 32)       -- было 255,255,255
             label.BackgroundTransparency = 1
             label.BorderSizePixel = 2
             label.Size = UDim2.new(0, 418, 0, 37)
             label.Font = Enum.Font.Gotham
-            label.TextColor3 = theme.textMuted
+            label.TextColor3 = Color3.fromRGB(120, 120, 145)          -- было 95,95,95
             label.TextSize = 21
             label.TextWrapped = true
             label.Text = name
@@ -879,13 +858,13 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             local toggleswitch = Instance.new("TextLabel")
             toggleswitch.Name = "toggleswitch"
             toggleswitch.Parent = workareamain
-            toggleswitch.BackgroundColor3 = theme.surface
+            toggleswitch.BackgroundColor3 = Color3.fromRGB(26, 26, 32)  -- было 255,255,255
             toggleswitch.BackgroundTransparency = 1
             toggleswitch.BorderSizePixel = 2
             toggleswitch.Size = UDim2.new(0, 418, 0, 37)
             toggleswitch.Font = Enum.Font.Gotham
             toggleswitch.Text = name
-            toggleswitch.TextColor3 = theme.textPrimary
+            toggleswitch.TextColor3 = Color3.fromRGB(120, 120, 145)     -- было 95,95,95
             toggleswitch.TextSize = 21
             toggleswitch.TextWrapped = true
             toggleswitch.TextXAlignment = Enum.TextXAlignment.Left
@@ -894,7 +873,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             Frame.Parent = toggleswitch
             Frame.Position = UDim2.new(0.832535863, 0, 0.0270270277, 0)
             Frame.Size = UDim2.new(0, 70, 0, 36)
-            Frame.Text = ""
+            Frame.Text=""
             Frame.AutoButtonColor = false
 
             local uc_4 = Instance.new("UICorner")
@@ -903,7 +882,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
 
             local TextButton = Instance.new("TextButton")
             TextButton.Parent = Frame
-            TextButton.BackgroundColor3 = Color3.fromRGB(230, 230, 240)
+            TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             TextButton.Size = UDim2.new(0, 34, 0, 34)
             TextButton.AutoButtonColor = false
             TextButton.Text = ""
@@ -914,32 +893,40 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
 
             if defaultmode == false then
                 TextButton.Position = UDim2.new(0, 1, 0, 1)
-                Frame.BackgroundColor3 = theme.elevated
+                Frame.BackgroundColor3 = Color3.fromRGB(216, 216, 216)
             else
                 TextButton.Position = UDim2.new(0, 35, 0, 1)
-                Frame.BackgroundColor3 = theme.accent
+                Frame.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
             end
 
             Frame.MouseButton1Click:Connect(function()
                 mode = not mode
-                if callback then callback(mode) end
+
+                if callback then
+                    callback(mode)
+                end
+
                 if mode then
                     TextButton:TweenPosition(UDim2.new(0, 35, 0, 1), "In", "Sine", 0.1, true)
-                    Frame.BackgroundColor3 = theme.accent
+                    Frame.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
                 else
                     TextButton:TweenPosition(UDim2.new(0,1,0,1), "In", "Sine", 0.1, true)
-                    Frame.BackgroundColor3 = theme.elevated
+                    Frame.BackgroundColor3 = Color3.fromRGB(216, 216, 216)
                 end
             end)
             TextButton.MouseButton1Click:Connect(function()
                 mode = not mode
-                if callback then callback(mode) end
+
+                if callback then
+                    callback(mode)
+                end
+
                 if mode then
                     TextButton:TweenPosition(UDim2.new(0, 35, 0, 1), "In", "Sine", 0.1, true)
-                    Frame.BackgroundColor3 = theme.accent
+                    Frame.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
                 else
                     TextButton:TweenPosition(UDim2.new(0,1,0,1), "In", "Sine", 0.1, true)
-                    Frame.BackgroundColor3 = theme.elevated
+                    Frame.BackgroundColor3 = Color3.fromRGB(216, 216, 216)
                 end
             end)
         end
@@ -948,27 +935,22 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             local textfield = Instance.new("TextLabel")
             textfield.Name = "textfield"
             textfield.Parent = workareamain
-            textfield.BackgroundColor3 = theme.surface
+            textfield.BackgroundColor3 = Color3.fromRGB(26, 26, 32)   -- было 255,255,255
             textfield.BackgroundTransparency = 1
             textfield.BorderSizePixel = 2
             textfield.Size = UDim2.new(0, 418, 0, 37)
             textfield.Font = Enum.Font.Gotham
             textfield.Text = name
-            textfield.TextColor3 = theme.textPrimary
+            textfield.TextColor3 = Color3.fromRGB(120, 120, 145)      -- было 95,95,95
             textfield.TextSize = 21
             textfield.TextWrapped = true
             textfield.TextXAlignment = Enum.TextXAlignment.Left
 
             local Frame_2 = Instance.new("Frame")
             Frame_2.Parent = textfield
-            Frame_2.BackgroundColor3 = theme.elevated
+            Frame_2.BackgroundColor3 = Color3.fromRGB(34, 34, 42)     -- было 240,240,240
             Frame_2.Position = UDim2.new(0.441926777, 0, 0.0270270277, 0)
             Frame_2.Size = UDim2.new(0, 233, 0, 34)
-
-            local tfStroke = Instance.new("UIStroke")
-            tfStroke.Color = theme.border
-            tfStroke.Thickness = 1
-            tfStroke.Parent = Frame_2
 
             local uc_6 = Instance.new("UICorner")
             uc_6.CornerRadius = UDim.new(0, 9)
@@ -976,9 +958,9 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
 
             local TextBox = Instance.new("TextBox")
             TextBox.Parent = Frame_2
-            TextBox.BackgroundColor3 = theme.elevated
+            TextBox.BackgroundColor3 = Color3.fromRGB(34, 34, 42)     -- было 255,255,255
             TextBox.BackgroundTransparency = 1
-            TextBox.BorderColor3 = theme.border
+            TextBox.BorderColor3 = Color3.fromRGB(27, 42, 53)
             TextBox.BorderSizePixel = 0
             TextBox.ClipsDescendants = true
             TextBox.Position = UDim2.new(0.0643776804, 0, 0, -2)
@@ -986,10 +968,10 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
             TextBox.ClearTextOnFocus = false
             TextBox.Font = Enum.Font.Gotham
             TextBox.LineHeight = 0.870
-            TextBox.PlaceholderColor3 = theme.textMuted
+            TextBox.PlaceholderColor3 = Color3.fromRGB(113, 113, 113)
             TextBox.PlaceholderText = placeholder or "Type..."
             TextBox.Text = ""
-            TextBox.TextColor3 = theme.textPrimary
+            TextBox.TextColor3 = Color3.fromRGB(200, 200, 215)        -- было 12,12,12
             TextBox.TextSize = 21
             TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -998,659 +980,6 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
                     callback(TextBox.Text)
                 end)
             end
-        end
-
-        -- =====================================================
-        -- SLIDER
-        -- sec:Slider(name, min, max, default, callback)
-        -- =====================================================
-        function sec:Slider(name, min, max, default, callback)
-            local value = math.clamp(default or min, min, max)
-            local UIS = game:GetService("UserInputService")
-            local draggingSlider = false
-
-            -- row container (fixed height 50px: 22 label + 10 track + padding)
-            local row = Instance.new("Frame")
-            row.Name = "sliderrow"
-            row.Parent = workareamain
-            row.BackgroundTransparency = 1
-            row.Size = UDim2.new(0, 418, 0, 50)
-
-            -- name label
-            local namelbl = Instance.new("TextLabel")
-            namelbl.Parent = row
-            namelbl.BackgroundTransparency = 1
-            namelbl.Position = UDim2.new(0, 0, 0, 0)
-            namelbl.Size = UDim2.new(0.72, 0, 0, 22)
-            namelbl.Font = Enum.Font.Gotham
-            namelbl.Text = name
-            namelbl.TextColor3 = theme.textPrimary
-            namelbl.TextSize = 19
-            namelbl.TextXAlignment = Enum.TextXAlignment.Left
-
-            -- value label (right)
-            local vallbl = Instance.new("TextLabel")
-            vallbl.Parent = row
-            vallbl.BackgroundTransparency = 1
-            vallbl.Position = UDim2.new(0.72, 0, 0, 0)
-            vallbl.Size = UDim2.new(0.28, 0, 0, 22)
-            vallbl.Font = Enum.Font.GothamMedium
-            vallbl.Text = tostring(value)
-            vallbl.TextColor3 = theme.accent
-            vallbl.TextSize = 18
-            vallbl.TextXAlignment = Enum.TextXAlignment.Right
-
-            -- track background
-            local track = Instance.new("Frame")
-            track.Parent = row
-            track.BackgroundColor3 = theme.elevated
-            track.Position = UDim2.new(0, 0, 0, 30)
-            track.Size = UDim2.new(1, 0, 0, 10)
-            track.BorderSizePixel = 0
-
-            local trackUC = Instance.new("UICorner")
-            trackUC.CornerRadius = UDim.new(1, 0)
-            trackUC.Parent = track
-
-            local trackStroke = Instance.new("UIStroke")
-            trackStroke.Color = theme.border
-            trackStroke.Thickness = 1
-            trackStroke.Parent = track
-
-            -- fill
-            local fill = Instance.new("Frame")
-            fill.Parent = track
-            fill.BackgroundColor3 = theme.accent
-            fill.BorderSizePixel = 0
-            fill.Size = UDim2.new((value - min) / (max - min), 0, 1, 0)
-
-            local fillUC = Instance.new("UICorner")
-            fillUC.CornerRadius = UDim.new(1, 0)
-            fillUC.Parent = fill
-
-            -- thumb
-            local thumb = Instance.new("Frame")
-            thumb.Parent = track
-            thumb.BackgroundColor3 = Color3.fromRGB(230, 230, 240)
-            thumb.AnchorPoint = Vector2.new(0.5, 0.5)
-            thumb.Position = UDim2.new((value - min) / (max - min), 0, 0.5, 0)
-            thumb.Size = UDim2.new(0, 14, 0, 14)
-            thumb.ZIndex = 2
-            thumb.BorderSizePixel = 0
-
-            local thumbUC = Instance.new("UICorner")
-            thumbUC.CornerRadius = UDim.new(1, 0)
-            thumbUC.Parent = thumb
-
-            local function setSlider(inputX)
-                local ap = track.AbsolutePosition.X
-                local as = track.AbsoluteSize.X
-                local rel = math.clamp((inputX - ap) / as, 0, 1)
-                value = math.floor(min + (max - min) * rel)
-                fill.Size = UDim2.new(rel, 0, 1, 0)
-                thumb.Position = UDim2.new(rel, 0, 0.5, 0)
-                vallbl.Text = tostring(value)
-                if callback then callback(value) end
-            end
-
-            track.InputBegan:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSlider = true
-                    setSlider(inp.Position.X)
-                end
-            end)
-            thumb.InputBegan:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSlider = true
-                end
-            end)
-            UIS.InputChanged:Connect(function(inp)
-                if draggingSlider and inp.UserInputType == Enum.UserInputType.MouseMovement then
-                    setSlider(inp.Position.X)
-                end
-            end)
-            UIS.InputEnded:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSlider = false
-                end
-            end)
-        end
-
-        -- =====================================================
-        -- DROPDOWN
-        -- sec:Dropdown(name, options, default, callback)
-        -- =====================================================
-        function sec:Dropdown(name, options, default, callback)
-            local selected = default or options[1]
-            local open = false
-            local ITEM_H = 30
-            local LIST_PAD = 8
-            local listHeight = #options * ITEM_H + LIST_PAD
-
-            -- outer wrapper: ClipsDescendants = false so list overflows
-            local wrapper = Instance.new("Frame")
-            wrapper.Name = "ddwrapper"
-            wrapper.Parent = workareamain
-            wrapper.BackgroundTransparency = 1
-            wrapper.ClipsDescendants = false
-            wrapper.Size = UDim2.new(0, 418, 0, 37)
-
-            -- header row (always visible)
-            local header = Instance.new("Frame")
-            header.Parent = wrapper
-            header.BackgroundTransparency = 1
-            header.Size = UDim2.new(0, 418, 0, 37)
-
-            local namelbl = Instance.new("TextLabel")
-            namelbl.Parent = header
-            namelbl.BackgroundTransparency = 1
-            namelbl.Size = UDim2.new(0, 184, 0, 37)  -- fixed ~44% of 418
-            namelbl.Font = Enum.Font.Gotham
-            namelbl.Text = name
-            namelbl.TextColor3 = theme.textPrimary
-            namelbl.TextSize = 19
-            namelbl.TextXAlignment = Enum.TextXAlignment.Left
-
-            -- the button that shows current selection
-            local btn = Instance.new("TextButton")
-            btn.Parent = header
-            btn.BackgroundColor3 = theme.elevated
-            btn.Position = UDim2.new(0, 188, 0, 1)   -- right of label
-            btn.Size = UDim2.new(0, 230, 0, 35)
-            btn.AutoButtonColor = false
-            btn.Font = Enum.Font.Gotham
-            btn.Text = selected .. "  ▾"
-            btn.TextColor3 = theme.textPrimary
-            btn.TextSize = 17
-            btn.ZIndex = 4
-
-            local btnUC = Instance.new("UICorner")
-            btnUC.CornerRadius = UDim.new(0, 9)
-            btnUC.Parent = btn
-
-            local btnStroke = Instance.new("UIStroke")
-            btnStroke.Color = theme.border
-            btnStroke.Thickness = 1
-            btnStroke.Parent = btn
-
-            -- dropdown list: positioned ABSOLUTE below the button
-            -- parented to wrapper (not to workareamain) so it overlays items below
-            local ddlist = Instance.new("Frame")
-            ddlist.Name = "ddlist"
-            ddlist.Parent = wrapper
-            ddlist.BackgroundColor3 = theme.elevated
-            ddlist.Position = UDim2.new(0, 188, 0, 41)  -- same X as btn, just below
-            ddlist.Size = UDim2.new(0, 230, 0, listHeight)
-            ddlist.Visible = false
-            ddlist.ZIndex = 20
-            ddlist.ClipsDescendants = true
-            ddlist.BorderSizePixel = 0
-
-            local ddlistUC = Instance.new("UICorner")
-            ddlistUC.CornerRadius = UDim.new(0, 9)
-            ddlistUC.Parent = ddlist
-
-            local ddlistStroke = Instance.new("UIStroke")
-            ddlistStroke.Color = theme.accent
-            ddlistStroke.Thickness = 1
-            ddlistStroke.Parent = ddlist
-
-            local ddlistLayout = Instance.new("UIListLayout")
-            ddlistLayout.Parent = ddlist
-            ddlistLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            ddlistLayout.Padding = UDim.new(0, 0)
-
-            local ddlistPad = Instance.new("UIPadding")
-            ddlistPad.Parent = ddlist
-            ddlistPad.PaddingTop = UDim.new(0, 4)
-            ddlistPad.PaddingBottom = UDim.new(0, 4)
-            ddlistPad.PaddingLeft = UDim.new(0, 5)
-            ddlistPad.PaddingRight = UDim.new(0, 5)
-
-            local optButtons = {}
-            for i, opt in ipairs(options) do
-                local optbtn = Instance.new("TextButton")
-                optbtn.Parent = ddlist
-                optbtn.BackgroundColor3 = theme.border
-                optbtn.BackgroundTransparency = 1
-                optbtn.Size = UDim2.new(1, 0, 0, ITEM_H)
-                optbtn.Font = Enum.Font.Gotham
-                optbtn.Text = opt
-                optbtn.TextColor3 = (opt == selected) and theme.accent or theme.textPrimary
-                optbtn.TextSize = 16
-                optbtn.ZIndex = 21
-                optbtn.AutoButtonColor = false
-                optbtn.LayoutOrder = i
-
-                local optUC = Instance.new("UICorner")
-                optUC.CornerRadius = UDim.new(0, 6)
-                optUC.Parent = optbtn
-
-                table.insert(optButtons, optbtn)
-
-                optbtn.MouseEnter:Connect(function()
-                    if opt ~= selected then
-                        optbtn.BackgroundTransparency = 0
-                    end
-                end)
-                optbtn.MouseLeave:Connect(function()
-                    if opt ~= selected then
-                        optbtn.BackgroundTransparency = 1
-                    end
-                end)
-                optbtn.MouseButton1Click:Connect(function()
-                    selected = opt
-                    btn.Text = selected .. "  ▾"
-                    btnStroke.Color = theme.border
-                    -- reset colours
-                    for _, ob in ipairs(optButtons) do
-                        ob.TextColor3 = theme.textPrimary
-                        ob.BackgroundTransparency = 1
-                    end
-                    optbtn.TextColor3 = theme.accent
-                    optbtn.BackgroundTransparency = 0
-                    open = false
-                    ddlist.Visible = false
-                    if callback then callback(selected) end
-                end)
-            end
-
-            btn.MouseButton1Click:Connect(function()
-                open = not open
-                ddlist.Visible = open
-                if open then
-                    btn.Text = selected .. "  ▴"
-                    btnStroke.Color = theme.accent
-                else
-                    btn.Text = selected .. "  ▾"
-                    btnStroke.Color = theme.border
-                end
-            end)
-        end
-
-        -- =====================================================
-        -- KEYBIND
-        -- sec:Keybind(name, default, callback)
-        -- callback вызывается при назначении и при нажатии
-        -- =====================================================
-        function sec:Keybind(name, default, callback)
-            local currentKey = default
-            local listening = false
-            local UIS = game:GetService("UserInputService")
-
-            local row = Instance.new("Frame")
-            row.Name = "kbrow"
-            row.Parent = workareamain
-            row.BackgroundTransparency = 1
-            row.Size = UDim2.new(0, 418, 0, 37)
-
-            local namelbl = Instance.new("TextLabel")
-            namelbl.Parent = row
-            namelbl.BackgroundTransparency = 1
-            namelbl.Size = UDim2.new(0, 290, 0, 37)
-            namelbl.Font = Enum.Font.Gotham
-            namelbl.Text = name
-            namelbl.TextColor3 = theme.textPrimary
-            namelbl.TextSize = 19
-            namelbl.TextXAlignment = Enum.TextXAlignment.Left
-
-            local function keyName(kc)
-                if not kc then return "None" end
-                return tostring(kc):gsub("Enum.KeyCode.", "")
-            end
-
-            local kbbtn = Instance.new("TextButton")
-            kbbtn.Parent = row
-            kbbtn.BackgroundColor3 = theme.elevated
-            kbbtn.Position = UDim2.new(0, 294, 0, 4)
-            kbbtn.Size = UDim2.new(0, 120, 0, 29)
-            kbbtn.AutoButtonColor = false
-            kbbtn.Font = Enum.Font.GothamMedium
-            kbbtn.Text = keyName(currentKey)
-            kbbtn.TextColor3 = theme.accent
-            kbbtn.TextSize = 16
-            kbbtn.ZIndex = 3
-
-            local kbUC = Instance.new("UICorner")
-            kbUC.CornerRadius = UDim.new(0, 7)
-            kbUC.Parent = kbbtn
-
-            local kbStroke = Instance.new("UIStroke")
-            kbStroke.Color = theme.border
-            kbStroke.Thickness = 1
-            kbStroke.Parent = kbbtn
-
-            kbbtn.MouseButton1Click:Connect(function()
-                if listening then return end
-                listening = true
-                kbbtn.Text = "..."
-                kbbtn.TextColor3 = theme.textMuted
-                kbStroke.Color = theme.accent
-
-                local conn
-                conn = UIS.InputBegan:Connect(function(inp, gp)
-                    if gp then return end
-                    if inp.UserInputType == Enum.UserInputType.Keyboard then
-                        currentKey = inp.KeyCode
-                        kbbtn.Text = keyName(currentKey)
-                        kbbtn.TextColor3 = theme.accent
-                        kbStroke.Color = theme.border
-                        listening = false
-                        conn:Disconnect()
-                        if callback then callback(currentKey) end
-                    end
-                end)
-            end)
-
-            -- fire callback when assigned key is pressed during gameplay
-            UIS.InputBegan:Connect(function(inp, gp)
-                if gp then return end
-                if not listening and currentKey and inp.KeyCode == currentKey then
-                    if callback then callback(currentKey) end
-                end
-            end)
-        end
-
-        -- =====================================================
-        -- COLORPICKER
-        -- sec:ColorPicker(name, default, callback)
-        -- =====================================================
-        function sec:ColorPicker(name, default, callback)
-            local currentColor = default or Color3.fromRGB(255, 0, 0)
-            local open = false
-            local UIS = game:GetService("UserInputService")
-            local h, s, v = Color3.toHSV(currentColor)
-
-            local PANEL_H = 158
-
-            -- row wrapper
-            local cprow = Instance.new("Frame")
-            cprow.Name = "cprow"
-            cprow.Parent = workareamain
-            cprow.BackgroundTransparency = 1
-            cprow.ClipsDescendants = false
-            cprow.Size = UDim2.new(0, 418, 0, 37)
-
-            -- header
-            local namelbl = Instance.new("TextLabel")
-            namelbl.Parent = cprow
-            namelbl.BackgroundTransparency = 1
-            namelbl.Size = UDim2.new(0, 290, 0, 37)
-            namelbl.Font = Enum.Font.Gotham
-            namelbl.Text = name
-            namelbl.TextColor3 = theme.textPrimary
-            namelbl.TextSize = 19
-            namelbl.TextXAlignment = Enum.TextXAlignment.Left
-
-            -- swatch preview button
-            local swatchBtn = Instance.new("TextButton")
-            swatchBtn.Parent = cprow
-            swatchBtn.Position = UDim2.new(0, 294, 0, 4)
-            swatchBtn.Size = UDim2.new(0, 120, 0, 29)
-            swatchBtn.BackgroundColor3 = currentColor
-            swatchBtn.AutoButtonColor = false
-            swatchBtn.Text = ""
-            swatchBtn.ZIndex = 3
-
-            local swatchUC = Instance.new("UICorner")
-            swatchUC.CornerRadius = UDim.new(0, 7)
-            swatchUC.Parent = swatchBtn
-
-            local swatchStroke = Instance.new("UIStroke")
-            swatchStroke.Color = theme.border
-            swatchStroke.Thickness = 1
-            swatchStroke.Parent = swatchBtn
-
-            -- panel (opens below the row)
-            local panel = Instance.new("Frame")
-            panel.Name = "cpanel"
-            panel.Parent = cprow
-            panel.BackgroundColor3 = theme.elevated
-            panel.Position = UDim2.new(0, 0, 0, 41)
-            panel.Size = UDim2.new(0, 418, 0, PANEL_H)
-            panel.Visible = false
-            panel.ZIndex = 15
-            panel.BorderSizePixel = 0
-            panel.ClipsDescendants = false
-
-            local panelUC = Instance.new("UICorner")
-            panelUC.CornerRadius = UDim.new(0, 10)
-            panelUC.Parent = panel
-
-            local panelStroke = Instance.new("UIStroke")
-            panelStroke.Color = theme.border
-            panelStroke.Thickness = 1
-            panelStroke.Parent = panel
-
-            -- SV square (sat horizontal, val vertical inverted)
-            local SV_SIZE = 130
-            local svFrame = Instance.new("Frame")
-            svFrame.Parent = panel
-            svFrame.Position = UDim2.new(0, 10, 0, 10)
-            svFrame.Size = UDim2.new(0, SV_SIZE, 0, SV_SIZE)
-            svFrame.ZIndex = 16
-            svFrame.BorderSizePixel = 0
-            svFrame.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
-
-            local svUC = Instance.new("UICorner")
-            svUC.CornerRadius = UDim.new(0, 6)
-            svUC.Parent = svFrame
-
-            -- white → transparent gradient (left=white, right=hue)
-            local svGradH = Instance.new("UIGradient")
-            svGradH.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255)),
-            })
-            svGradH.Transparency = NumberSequence.new({
-                NumberSequenceKeypoint.new(0, 1),
-                NumberSequenceKeypoint.new(1, 0),
-            })
-            svGradH.Rotation = 0  -- left=white(opaque), right=transparent so hue shows
-            svGradH.Parent = svFrame
-
-            -- black overlay (bottom=black)
-            local svDark = Instance.new("Frame")
-            svDark.Parent = svFrame
-            svDark.Size = UDim2.new(1,0,1,0)
-            svDark.BackgroundColor3 = Color3.fromRGB(0,0,0)
-            svDark.ZIndex = 17
-            svDark.BorderSizePixel = 0
-
-            local svDarkUC = Instance.new("UICorner")
-            svDarkUC.CornerRadius = UDim.new(0, 6)
-            svDarkUC.Parent = svDark
-
-            local svDarkGrad = Instance.new("UIGradient")
-            svDarkGrad.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0)),
-            })
-            svDarkGrad.Transparency = NumberSequence.new({
-                NumberSequenceKeypoint.new(0, 1),
-                NumberSequenceKeypoint.new(1, 0),
-            })
-            svDarkGrad.Rotation = 90  -- top=transparent, bottom=black
-            svDarkGrad.Parent = svDark
-
-            -- SV cursor
-            local svCursor = Instance.new("Frame")
-            svCursor.Parent = svDark
-            svCursor.AnchorPoint = Vector2.new(0.5, 0.5)
-            svCursor.Size = UDim2.new(0, 10, 0, 10)
-            svCursor.Position = UDim2.new(s, 0, 1 - v, 0)
-            svCursor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            svCursor.ZIndex = 19
-            svCursor.BorderSizePixel = 0
-
-            local svCursorUC = Instance.new("UICorner")
-            svCursorUC.CornerRadius = UDim.new(1, 0)
-            svCursorUC.Parent = svCursor
-
-            local svCursorStroke = Instance.new("UIStroke")
-            svCursorStroke.Color = Color3.fromRGB(0, 0, 0)
-            svCursorStroke.Thickness = 1.5
-            svCursorStroke.Parent = svCursor
-
-            -- Hue bar (vertical rainbow)
-            local hueBar = Instance.new("Frame")
-            hueBar.Parent = panel
-            hueBar.Position = UDim2.new(0, 150, 0, 10)
-            hueBar.Size = UDim2.new(0, 16, 0, SV_SIZE)
-            hueBar.ZIndex = 16
-            hueBar.BorderSizePixel = 0
-            hueBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-
-            local hueBarUC = Instance.new("UICorner")
-            hueBarUC.CornerRadius = UDim.new(0, 5)
-            hueBarUC.Parent = hueBar
-
-            local hueGrad = Instance.new("UIGradient")
-            hueGrad.Rotation = 90
-            hueGrad.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0,     Color3.fromHSV(0,     1, 1)),
-                ColorSequenceKeypoint.new(1/6,   Color3.fromHSV(1/6,   1, 1)),
-                ColorSequenceKeypoint.new(2/6,   Color3.fromHSV(2/6,   1, 1)),
-                ColorSequenceKeypoint.new(3/6,   Color3.fromHSV(3/6,   1, 1)),
-                ColorSequenceKeypoint.new(4/6,   Color3.fromHSV(4/6,   1, 1)),
-                ColorSequenceKeypoint.new(5/6,   Color3.fromHSV(5/6,   1, 1)),
-                ColorSequenceKeypoint.new(1,     Color3.fromHSV(0,     1, 1)),
-            })
-            hueGrad.Parent = hueBar
-
-            -- Hue cursor
-            local hueCursor = Instance.new("Frame")
-            hueCursor.Parent = hueBar
-            hueCursor.AnchorPoint = Vector2.new(0.5, 0.5)
-            hueCursor.Size = UDim2.new(1.5, 0, 0, 5)
-            hueCursor.Position = UDim2.new(0.5, 0, h, 0)
-            hueCursor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            hueCursor.ZIndex = 18
-            hueCursor.BorderSizePixel = 0
-
-            local hueCursorUC = Instance.new("UICorner")
-            hueCursorUC.CornerRadius = UDim.new(0, 3)
-            hueCursorUC.Parent = hueCursor
-
-            local hueCursorStroke = Instance.new("UIStroke")
-            hueCursorStroke.Color = Color3.fromRGB(0,0,0)
-            hueCursorStroke.Thickness = 1
-            hueCursorStroke.Parent = hueCursor
-
-            -- big preview swatch inside panel
-            local bigPrev = Instance.new("Frame")
-            bigPrev.Parent = panel
-            bigPrev.Position = UDim2.new(0, 178, 0, 10)
-            bigPrev.Size = UDim2.new(0, 55, 0, 55)
-            bigPrev.BackgroundColor3 = currentColor
-            bigPrev.ZIndex = 16
-            bigPrev.BorderSizePixel = 0
-
-            local bigPrevUC = Instance.new("UICorner")
-            bigPrevUC.CornerRadius = UDim.new(0, 8)
-            bigPrevUC.Parent = bigPrev
-
-            -- hex label
-            local hexLbl = Instance.new("TextLabel")
-            hexLbl.Parent = panel
-            hexLbl.BackgroundTransparency = 1
-            hexLbl.Position = UDim2.new(0, 178, 0, 72)
-            hexLbl.Size = UDim2.new(0, 230, 0, 20)
-            hexLbl.Font = Enum.Font.GothamMedium
-            hexLbl.TextSize = 14
-            hexLbl.TextColor3 = theme.textMuted
-            hexLbl.TextXAlignment = Enum.TextXAlignment.Left
-            hexLbl.ZIndex = 16
-
-            -- RGB labels
-            local rgbLbl = Instance.new("TextLabel")
-            rgbLbl.Parent = panel
-            rgbLbl.BackgroundTransparency = 1
-            rgbLbl.Position = UDim2.new(0, 178, 0, 94)
-            rgbLbl.Size = UDim2.new(0, 230, 0, 20)
-            rgbLbl.Font = Enum.Font.Gotham
-            rgbLbl.TextSize = 13
-            rgbLbl.TextColor3 = theme.textMuted
-            rgbLbl.TextXAlignment = Enum.TextXAlignment.Left
-            rgbLbl.ZIndex = 16
-
-            local function applyColor()
-                currentColor = Color3.fromHSV(h, s, v)
-                svFrame.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
-                svCursor.Position = UDim2.new(s, 0, 1 - v, 0)
-                hueCursor.Position = UDim2.new(0.5, 0, h, 0)
-                swatchBtn.BackgroundColor3 = currentColor
-                bigPrev.BackgroundColor3 = currentColor
-                hexLbl.Text = string.format("#%02X%02X%02X",
-                    math.floor(currentColor.R * 255),
-                    math.floor(currentColor.G * 255),
-                    math.floor(currentColor.B * 255))
-                rgbLbl.Text = string.format("R %d  G %d  B %d",
-                    math.floor(currentColor.R * 255),
-                    math.floor(currentColor.G * 255),
-                    math.floor(currentColor.B * 255))
-                if callback then callback(currentColor) end
-            end
-            applyColor()
-
-            -- drag state
-            local draggingSV = false
-            local draggingHue = false
-
-            svDark.InputBegan:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSV = true
-                    local rel = inp.Position - svFrame.AbsolutePosition
-                    s = math.clamp(rel.X / svFrame.AbsoluteSize.X, 0, 1)
-                    v = 1 - math.clamp(rel.Y / svFrame.AbsoluteSize.Y, 0, 1)
-                    applyColor()
-                end
-            end)
-            svFrame.InputBegan:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSV = true
-                end
-            end)
-
-            hueBar.InputBegan:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingHue = true
-                    h = math.clamp((inp.Position.Y - hueBar.AbsolutePosition.Y) / hueBar.AbsoluteSize.Y, 0, 1)
-                    applyColor()
-                end
-            end)
-
-            UIS.InputChanged:Connect(function(inp)
-                if inp.UserInputType ~= Enum.UserInputType.MouseMovement then return end
-                if draggingSV then
-                    local rel = inp.Position - svFrame.AbsolutePosition
-                    s = math.clamp(rel.X / svFrame.AbsoluteSize.X, 0, 1)
-                    v = 1 - math.clamp(rel.Y / svFrame.AbsoluteSize.Y, 0, 1)
-                    applyColor()
-                elseif draggingHue then
-                    h = math.clamp((inp.Position.Y - hueBar.AbsolutePosition.Y) / hueBar.AbsoluteSize.Y, 0, 1)
-                    applyColor()
-                end
-            end)
-
-            UIS.InputEnded:Connect(function(inp)
-                if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-                    draggingSV = false
-                    draggingHue = false
-                end
-            end)
-
-            swatchBtn.MouseButton1Click:Connect(function()
-                open = not open
-                panel.Visible = open
-                if open then
-                    swatchStroke.Color = theme.accent
-                    cprow.Size = UDim2.new(0, 418, 0, 37 + 6 + PANEL_H)
-                else
-                    swatchStroke.Color = theme.border
-                    cprow.Size = UDim2.new(0, 418, 0, 37)
-                end
-            end)
         end
 
         sidebar2.MouseButton1Click:Connect(function()
